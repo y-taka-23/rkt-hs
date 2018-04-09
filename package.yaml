@@ -1,0 +1,21 @@
+name:                rkt
+version:             0.1.0
+github:              "y-taka-23/rkt-hs"
+license:             BSD3
+author:              "TAKAHASHI Yuto <ytaka23dev@gmail.com>"
+maintainer:          "TAKAHASHI Yuto <ytaka23dev@gmail.com>"
+copyright:           "Copyright (C) 2018 TAKAHASHI Yuto"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+synopsis:            A library for the rkt container runtime
+category:            System
+description:         Please see the README on Github at <https://github.com/y-taka-23/rkt-hs#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
