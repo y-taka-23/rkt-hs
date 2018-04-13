@@ -28,6 +28,26 @@ data PodState =
     | PodGarbage
     deriving (Eq, Show)
 
+data App = App {
+      appName            :: Text
+    , appState           :: AppState
+    , appCreatedAt       :: UTCTime
+    , appStatedAt        :: UTCTime
+    , appFinishedAt      :: UTCTime
+    , appExitCode        :: Text
+    , appImageID         :: Text
+    , appMounts          :: [Mount]
+    , appUserAnnotations :: [(Text, Text)] -- Todo: Data.Map is better?
+    , appUserLabels      :: [(Text, Text)]
+    } deriving (Eq, Show)
+
+data AppState =
+      AppUnkown
+    | AppCreated
+    | AppRunning
+    | AppExited
+    deriving (Eq, Show)
+
 -- Todo: stub
-data App = App deriving (Eq, Show)
 data Network = Network deriving (Eq, Show)
+data Mount = Mount deriving (Eq, Show)
