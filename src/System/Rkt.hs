@@ -34,7 +34,7 @@ data App = App {
     , appCreatedAt       :: UTCTime
     , appStatedAt        :: UTCTime
     , appFinishedAt      :: UTCTime
-    , appExitCode        :: Text
+    , appExitCode        :: Int
     , appImageID         :: Text
     , appMounts          :: [Mount]
     , appUserAnnotations :: [(Text, Text)] -- Todo: Data.Map is better?
