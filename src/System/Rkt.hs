@@ -48,6 +48,12 @@ data AppState =
     | AppExited
     deriving (Eq, Show)
 
+data Mount = Mount {
+      mountName          :: Text
+    , mountContainerPath :: FilePath
+    , mountHostPath      :: FilePath
+    , mountReadOnly      :: Bool
+    } deriving (Eq, Show)
+
 -- Todo: stub
 data Network = Network deriving (Eq, Show)
-data Mount = Mount deriving (Eq, Show)
