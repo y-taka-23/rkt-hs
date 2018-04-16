@@ -1,7 +1,8 @@
 module System.Rkt where
 
-import Data.Text
-import Data.Time
+import           Data.IP
+import           Data.Text
+import           Data.Time
 
 data Pod = Pod {
       podUUID            :: Text
@@ -55,5 +56,19 @@ data Mount = Mount {
     , mountReadOnly      :: Bool
     } deriving (Eq, Show)
 
+data Network = Network {
+      networkNetName    :: Text
+    , networkConfPath   :: FilePath
+    , networkPluginPath :: FilePath
+    , networkIfName     :: Text
+    , networkIP         :: IPv4
+    , networkArgs       :: Text  -- Todo: String or [String] is better?
+    , networkMask       :: AddrRange IPv4
+    , networkHostIP     :: IPv4
+    , networkIP4        :: IPConfig
+    , networkDNS        :: DNS
+    } deriving (Eq, Show)
+
 -- Todo: stub
-data Network = Network deriving (Eq, Show)
+data IPConfig = IPConfig deriving (Eq, Show)
+data DNS = DNS deriving (Eq, Show)
