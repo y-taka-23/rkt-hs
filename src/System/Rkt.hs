@@ -1,5 +1,9 @@
+{-# LANGUAGE DeriveFunctor         #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE RankNTypes            #-}
 module System.Rkt where
 
+import           Control.Monad.Reader
 import           Data.IP
 import           Data.Text
 import           Data.Time
@@ -69,6 +73,29 @@ data Network = Network {
     , networkDNS        :: DNS
     } deriving (Eq, Show)
 
+newtype RktT m a = RktT {
+      unRktT :: (Monad m) => ReaderT (GlobalOpts) m a
+    } deriving (Functor)
+
+instance (Applicative m) => Applicative (RktT m) where
+    pure x = RktT $ pure x
+    RktT f <*> RktT v = RktT $ f <*> v
+
+instance (Monad m) => Monad (RktT m) where
+    return = pure
+    RktT m >>= f = RktT $ m >>= unRktT . f
+
+instance (Monad m) => MonadReader GlobalOpts (RktT m) where
+    ask = RktT ask
+    local f (RktT m) = RktT $ local f m
+
+instance MonadTrans RktT where
+    lift m = RktT $ lift m
+
+instance MonadIO m => MonadIO (RktT m) where
+    liftIO = lift . liftIO
+
 -- Todo: stub
 data IPConfig = IPConfig deriving (Eq, Show)
 data DNS = DNS deriving (Eq, Show)
+data GlobalOpts = GlobalOpts
