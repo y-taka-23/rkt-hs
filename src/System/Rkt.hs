@@ -9,7 +9,7 @@ import           Data.Text
 import           Data.Time
 
 data Pod = Pod {
-      podUUID            :: Text
+      podUUID            :: UUID
     , podState           :: PodState
     , podNetworks        :: [Network]
     , podAppNames        :: [Text]
@@ -19,6 +19,9 @@ data Pod = Pod {
     , podUserAnnotations :: [(Text, Text)]
     , podUserLabels      :: [(Text, Text)]
     } deriving (Eq, Show)
+
+-- Todo: reconsider how to fetch an UUID by --uuid-file option
+type UUID = Text
 
 data PodState =
       PodEmbryo
