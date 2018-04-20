@@ -22,6 +22,8 @@ data Pod = Pod {
 
 -- Todo: reconsider how to fetch an UUID by --uuid-file option
 type UUID = Text
+-- Todo: reconsider how to deal image names
+type Image = Text
 
 data PodState =
       PodEmbryo
@@ -43,7 +45,7 @@ data App = App {
     , appStatedAt        :: UTCTime
     , appFinishedAt      :: UTCTime
     , appExitCode        :: Int
-    , appImageID         :: Text
+    , appImageID         :: Text -- Todo: replaceable by 'Image'?
     , appMounts          :: [Mount]
     , appUserAnnotations :: [(Text, Text)] -- Todo: Data.Map is better?
     , appUserLabels      :: [(Text, Text)]
@@ -98,7 +100,20 @@ instance MonadTrans RktT where
 instance MonadIO m => MonadIO (RktT m) where
     liftIO = lift . liftIO
 
+listPods :: (MonadIO io) => RktT io (Either RktError [Pod])
+listPods = undefined
+
+runPod :: (MonadIO io) => Image -> RktT io (Either RktError UUID)
+runPod = undefined
+
+stopPod :: (MonadIO io) => UUID -> RktT io (Either RktError ())
+stopPod = undefined
+
+rmPod :: (MonadIO io) => UUID -> RktT io (Either RktError ())
+rmPod = undefined
+
 -- Todo: stub
 data IPConfig = IPConfig deriving (Eq, Show)
 data DNS = DNS deriving (Eq, Show)
 data GlobalOpts = GlobalOpts
+data RktError = RkrError
