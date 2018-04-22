@@ -79,8 +79,11 @@ data Network = Network {
     } deriving (Eq, Show)
 
 newtype RktT m a = RktT {
-      unRktT :: (Monad m) => ReaderT (GlobalOpts) m a
+      unRktT :: (Monad m) => ReaderT GlobalOpts m a
     } deriving (Functor)
+
+runRktT :: (Monad m) => GlobalOpts -> RktT m a -> m a
+runRktT opts r = runReaderT (unRktT r) opts
 
 instance (Applicative m) => Applicative (RktT m) where
     pure x = RktT $ pure x
