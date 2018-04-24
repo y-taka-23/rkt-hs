@@ -112,8 +112,8 @@ runPod = undefined
 stopPod :: (MonadIO io) => UUID -> RktT io (Either RktError ())
 stopPod = undefined
 
-rmPod :: (MonadIO io) => UUID -> RktT io (Either RktError ())
-rmPod = undefined
+removePod :: (MonadIO io) => UUID -> RktT io (Either RktError ())
+removePod = undefined
 
 -- Todo: stub
 data IPConfig = IPConfig deriving (Eq, Show)
