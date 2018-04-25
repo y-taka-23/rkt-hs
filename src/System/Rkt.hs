@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveFunctor         #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
 module System.Rkt where
 
@@ -7,6 +8,7 @@ import           Control.Monad.Reader
 import           Data.IP
 import           Data.Text
 import           Data.Time
+import qualified Turtle               as T
 
 data Pod = Pod {
       podUUID            :: UUID
@@ -113,10 +115,17 @@ stopPod :: (MonadIO io) => UUID -> RktT io (Either RktError ())
 stopPod = undefined
 
 removePod :: (MonadIO io) => UUID -> RktT io (Either RktError ())
-removePod = undefined
+removePod uuid = do
+    let cmd = T.format ("sudo rkt rm "T.%T.s) uuid
+    -- Todo: how to handle stderr?
+    (exitCode, _) <- T.shellStrict cmd T.empty
+    case exitCode of
+        T.ExitSuccess   -> return $ Right ()
+        T.ExitFailure c -> return $ Left $ RktError c
+
+data RktError = RktError Int
 
 -- Todo: stub
 data IPConfig = IPConfig deriving (Eq, Show)
 data DNS = DNS deriving (Eq, Show)
 data GlobalOpts = GlobalOpts
-data RktError = RkrError
