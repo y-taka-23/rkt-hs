@@ -112,7 +112,12 @@ runPod :: (MonadIO io) => Image -> RktT io (Either RktError UUID)
 runPod = undefined
 
 stopPod :: (MonadIO io) => UUID -> RktT io (Either RktError ())
-stopPod = undefined
+stopPod uuid = do
+    let cmd = T.format ("sudo rkt stop "T.%T.s) uuid
+    (exitCode, _) <- T.shellStrict cmd T.empty
+    case exitCode of
+        T.ExitSuccess   -> return $ Right ()
+        T.ExitFailure c -> return $ Left $ RktError c
 
 removePod :: (MonadIO io) => UUID -> RktT io (Either RktError ())
 removePod uuid = do
