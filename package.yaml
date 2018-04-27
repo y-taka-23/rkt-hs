@@ -15,6 +15,7 @@ category:            System
 description:         Please see the README on Github at <https://github.com/y-taka-23/rkt-hs#readme>
 
 dependencies:
+- aeson
 - base >= 4.7 && < 5
 - iproute
 - mtl

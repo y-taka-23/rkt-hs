@@ -5,10 +5,12 @@
 module System.Rkt where
 
 import           Control.Monad.Reader
+import           Data.Aeson
 import           Data.IP
 import           Data.Text
+import           Data.Text.Lazy.Encoding
 import           Data.Time
-import qualified Turtle               as T
+import qualified Turtle                  as T
 
 data Pod = Pod {
       podUUID            :: UUID
@@ -21,6 +23,9 @@ data Pod = Pod {
     , podUserAnnotations :: [(Text, Text)]
     , podUserLabels      :: [(Text, Text)]
     } deriving (Eq, Show)
+
+instance FromJSON Pod where
+    parseJSON (Object v) = undefined
 
 -- Todo: reconsider how to fetch an UUID by --uuid-file option
 type UUID = Text
@@ -106,7 +111,16 @@ instance MonadIO m => MonadIO (RktT m) where
     liftIO = lift . liftIO
 
 listPods :: (MonadIO io) => RktT io (Either RktError [Pod])
-listPods = undefined
+listPods = do
+    let cmd = T.format ("rkt list --format json")
+    (exitCode, pods) <- T.shellStrict cmd T.empty
+    case exitCode of
+        T.ExitSuccess -> do
+            -- Todo: retrieve the parse error message
+            case decode' (encodeUtf8 pods) of
+                Nothing   -> return $ Left $ RktError 1
+                Just pods -> return $ Right pods
+        T.ExitFailure c -> return $ Left $ RktError c
 
 runPod :: (MonadIO io) => Image -> RktT io (Either RktError UUID)
 runPod = undefined
