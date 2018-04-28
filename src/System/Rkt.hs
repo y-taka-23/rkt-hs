@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveFunctor         #-}
+{-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
@@ -10,6 +11,7 @@ import           Data.IP
 import           Data.Text
 import           Data.Text.Lazy.Encoding
 import           Data.Time
+import           GHC.Generics
 import qualified Turtle                  as T
 
 data Pod = Pod {
@@ -22,10 +24,9 @@ data Pod = Pod {
     , podStartedAt       :: UTCTime
     , podUserAnnotations :: [(Text, Text)]
     , podUserLabels      :: [(Text, Text)]
-    } deriving (Eq, Show)
+    } deriving (Eq, Show, Generic)
 
-instance FromJSON Pod where
-    parseJSON (Object v) = undefined
+instance FromJSON Pod
 
 -- Todo: reconsider how to fetch an UUID by --uuid-file option
 type UUID = Text
@@ -43,7 +44,9 @@ data PodState =
     | PodExited
     | PodExitedGarbage
     | PodGarbage
-    deriving (Eq, Show)
+    deriving (Eq, Show, Generic)
+
+instance FromJSON PodState
 
 data App = App {
       appName            :: Text
@@ -56,21 +59,27 @@ data App = App {
     , appMounts          :: [Mount]
     , appUserAnnotations :: [(Text, Text)] -- Todo: Data.Map is better?
     , appUserLabels      :: [(Text, Text)]
-    } deriving (Eq, Show)
+    } deriving (Eq, Show, Generic)
+
+instance FromJSON App
 
 data AppState =
       AppUnkown
     | AppCreated
     | AppRunning
     | AppExited
-    deriving (Eq, Show)
+    deriving (Eq, Show, Generic)
+
+instance FromJSON AppState
 
 data Mount = Mount {
       mountName          :: Text
     , mountContainerPath :: FilePath
     , mountHostPath      :: FilePath
     , mountReadOnly      :: Bool
-    } deriving (Eq, Show)
+    } deriving (Eq, Show, Generic)
+
+instance FromJSON App
 
 data Network = Network {
       networkNetName    :: Text
@@ -83,7 +92,9 @@ data Network = Network {
     , networkHostIP     :: IPv4
     , networkIP4        :: IPConfig
     , networkDNS        :: DNS
-    } deriving (Eq, Show)
+    } deriving (Eq, Show, Generic)
+
+instance FromJSON Network
 
 newtype RktT m a = RktT {
       unRktT :: (Monad m) => ReaderT GlobalOpts m a
