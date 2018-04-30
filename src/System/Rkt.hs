@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveFunctor         #-}
 {-# LANGUAGE DeriveGeneric         #-}
+{-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
@@ -79,7 +80,7 @@ data Mount = Mount {
     , mountReadOnly      :: Bool
     } deriving (Eq, Show, Generic)
 
-instance FromJSON App
+instance FromJSON Mount
 
 data Network = Network {
       networkNetName    :: Text
@@ -156,6 +157,15 @@ removePod uuid = do
 data RktError = RktError Int
 
 -- Todo: stub
-data IPConfig = IPConfig deriving (Eq, Show)
-data DNS = DNS deriving (Eq, Show)
+data IPConfig = IPConfig deriving (Eq, Show, Generic)
+data DNS = DNS deriving (Eq, Show, Generic)
 data GlobalOpts = GlobalOpts
+
+instance FromJSON (AddrRange IPv4) where
+    parseJSON = undefined
+
+instance FromJSON IPv4 where
+    parseJSON = undefined
+
+instance FromJSON IPConfig
+instance FromJSON DNS
